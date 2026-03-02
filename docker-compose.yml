@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: boilerplate-postgres
+    environment:
+      POSTGRES_DB: boilerplate_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - boilerplate-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: boilerplate-api
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DATABASE_URL: postgres:5432
+      DATABASE_NAME: boilerplate_db
+      DATABASE_USER: postgres
+      DATABASE_PASS: postgres
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - boilerplate-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  boilerplate-network:
+    driver: bridge
