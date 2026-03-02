@@ -143,6 +143,3 @@ Os testes de exemplo cobrem a lógica de `UserServiceImpl` usando Mockito.
 - Imagem Docker minimalista com Temurin JRE 17
 - Pronto para integrar Spring Security (JWT/OAuth2) sem mudanças estruturais
 
----
-
-Se quiser, você pode usar este template como base para outros microsserviços, extraindo apenas os módulos de user ou replicando a estrutura de camadas.
